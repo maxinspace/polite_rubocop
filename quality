@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'json'
+
+# rubocop warnings
+output = `bin/rubocop --rails --format json`
+output = JSON.parse output
+warnings = output["summary"]["offense_count"]
+
+MAX_WARNINGS_NUMBER = 644
+
+if warnings > MAX_WARNINGS_NUMBER
+  puts "Warning limit exceeded: #{warnings}."
+  puts "You should keep amount of warnings from rubocop below #{MAX_WARNINGS_NUMBER}."
+  puts "To see all offences in your latest changes run: bin/rake polite:rubocop"
+  exit(1)
+else
+  puts "From rubocop: warnings count is #{warnings}."
+end
